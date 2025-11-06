@@ -1,4 +1,4 @@
-package de.inosofttech.example.decorator.with;
+package de.inosofttech.example.pattern.decorator.with;
 
 /**
  * Beispiel MIT Decorator Pattern (Kompositions-Ansatz)

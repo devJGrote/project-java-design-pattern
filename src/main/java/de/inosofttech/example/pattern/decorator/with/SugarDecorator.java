@@ -1,4 +1,4 @@
-package de.inosofttech.example.decorator.with;
+package de.inosofttech.example.pattern.decorator.with;
 
 // Zucker-Decorator
 public class SugarDecorator extends CoffeeDecorator {

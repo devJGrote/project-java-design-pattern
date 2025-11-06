@@ -1,11 +1,7 @@
-package de.inosofttech.example.decorator.with;
+package de.inosofttech.example.pattern.decorator.without;
 
-// Milch-Decorator
-public class MilkDecorator extends CoffeeDecorator {
-    public MilkDecorator(Coffee coffee) {
-        super(coffee);
-    }
-
+// Kaffee mit Milch
+public class CoffeeWithMilk extends Coffee {
     @Override
     public String getDescription() {
         return super.getDescription() + " + Milch";

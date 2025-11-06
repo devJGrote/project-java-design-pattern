@@ -1,4 +1,4 @@
-package de.inosofttech.example.decorator.with;
+package de.inosofttech.example.pattern.decorator.with;
 
 // Basis-Decorator
 public abstract class CoffeeDecorator implements Coffee {

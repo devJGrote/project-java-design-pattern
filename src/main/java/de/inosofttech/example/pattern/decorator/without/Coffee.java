@@ -1,4 +1,4 @@
-package de.inosofttech.example.decorator.without;
+package de.inosofttech.example.pattern.decorator.without;
 
 // Basis-Klasse für Kaffee
 public class Coffee {

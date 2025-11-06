@@ -1,4 +1,4 @@
-package de.inosofttech.example.decorator.without;
+package de.inosofttech.example.pattern.decorator.without;
 
 /**
  * Beispiel OHNE Decorator Pattern (Vererbungs-Ansatz)

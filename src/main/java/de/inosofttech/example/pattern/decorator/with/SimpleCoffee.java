@@ -1,4 +1,4 @@
-package de.inosofttech.example.decorator.with;
+package de.inosofttech.example.pattern.decorator.with;
 
 // Einfache Kaffee-Implementierung
 public class SimpleCoffee implements Coffee {
