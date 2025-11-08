@@ -49,4 +49,12 @@ public class SpielfeldTest {
         Spielfeld spielfeld = new Spielfeld(breite, hoehe, anzahlProzentLebendigeZellen);
         assertTrue(spielfeld.getLebendigeZellen() == 10);
     }
+
+    @Test
+    void testStirbtZelle() {
+        Spielfeld spielfeld = new Spielfeld(5, 5);
+        spielfeld.setLebendigeZelle(2, 2);
+        spielfeld.stirbtZell(2, 2);
+        assertTrue(spielfeld.getFeld(2, 2) == false);
+    }
 }

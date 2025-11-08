@@ -85,4 +85,12 @@ public class Spielfeld {
         return count;
     }
 
+    public void stirbtZell(int i, int j) {
+        zellen[i][j] = false;
+    }
+
+    public boolean getFeld(int i, int j) {
+        return zellen[i][j];
+    }
+
 }
