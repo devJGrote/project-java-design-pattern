@@ -27,12 +27,17 @@ public class SpielfeldTest {
     @Test
     void testZwanzigProzentZellenLebendig() {
         Spielfeld spielfeld = new Spielfeld(10, 10);
-
         spielfeld.initialLebendigeZellenProzent(20);
-
-        
-
         assertTrue(spielfeld.getLebendigeZellen() == 20);
     }
 
+    @Test
+    void testGetNachbarnLebendigeZellen() {
+        Spielfeld spielfeld = new Spielfeld(5, 5);
+        spielfeld.setLebendigeZelle(1, 1);
+        spielfeld.setLebendigeZelle(1, 2);
+        spielfeld.setLebendigeZelle(1, 3);
+        int nachbarn = spielfeld.getNachbarnLebendigeZellen(2, 2);
+        assertTrue(nachbarn == 3);
+    }
 }

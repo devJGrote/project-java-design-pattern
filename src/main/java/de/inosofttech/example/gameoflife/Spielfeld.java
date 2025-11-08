@@ -59,4 +59,23 @@ public class Spielfeld {
         return count;
     }
 
+    public int getNachbarnLebendigeZellen(int i, int j) {
+        int count = 0;
+        for (int x = -1; x <= 1; x++) {
+            for (int y = -1; y <= 1; y++) {
+                if (x == 0 && y == 0) {
+                    continue;
+                }
+                int ni = i + x;
+                int nj = j + y;
+                if (ni >= 0 && ni < breite && nj >= 0 && nj < hoehe) {
+                    if (zellen[ni][nj]) {
+                        count++;
+                    }
+                }
+            }
+        }
+        return count;
+    }
+
 }
