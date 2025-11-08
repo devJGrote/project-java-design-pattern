@@ -40,4 +40,13 @@ public class SpielfeldTest {
         int nachbarn = spielfeld.getNachbarnLebendigeZellen(2, 2);
         assertTrue(nachbarn == 3);
     }
+
+    @Test
+    void testInitialSSpielfeldMitLebendigenZellen() {
+        int breite = 5;
+        int hoehe = 5;
+        int anzahlProzentLebendigeZellen = 40;
+        Spielfeld spielfeld = new Spielfeld(breite, hoehe, anzahlProzentLebendigeZellen);
+        assertTrue(spielfeld.getLebendigeZellen() == 10);
+    }
 }

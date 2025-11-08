@@ -14,6 +14,13 @@ public class Spielfeld {
         this.zellen = new boolean[i][j];
     }
 
+    public Spielfeld(int breite, int hoehe, int anzahlProzentLebendigeZellen) {
+        this.breite = breite;
+        this.hoehe = hoehe;
+        this.zellen = new boolean[breite][hoehe];
+        initialLebendigeZellenProzent(anzahlProzentLebendigeZellen);
+    }
+
     public int getBreite() {
         return breite;
     }
