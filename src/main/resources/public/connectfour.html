@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4 Gewinnt</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .game-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            max-width: 800px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .info-panel {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 10px;
+        }
+
+        .player-info {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .player-yellow, .player-gelb {
+            color: #FFD700;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .player-red, .player-rot {
+            color: #DC143C;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .player-blue, .player-blau {
+            color: #4169E1;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .player-green, .player-grün {
+            color: #32CD32;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .reset-btn {
+            padding: 10px 20px;
+            font-size: 1em;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .reset-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .board {
+            background: #2563eb;
+            padding: 20px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: row;
+            gap: 10px;
+            box-shadow: inset 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .board-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            transition: all 0.2s ease;
+            padding: 5px;
+            border-radius: 10px;
+        }
+
+        .column:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-3px);
+        }
+
+        .cell {
+            width: 70px;
+            height: 70px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .cell.yellow {
+            background: radial-gradient(circle at 30% 30%, #FFD700, #FFA500);
+            box-shadow: 0 4px 8px rgba(255, 215, 0, 0.5);
+            animation: dropPiece 0.5s ease-out;
+        }
+
+        .cell.red {
+            background: radial-gradient(circle at 30% 30%, #FF6347, #DC143C);
+            box-shadow: 0 4px 8px rgba(220, 20, 60, 0.5);
+            animation: dropPiece 0.5s ease-out;
+        }
+
+        .cell.blue {
+            background: radial-gradient(circle at 30% 30%, #4169E1, #1E90FF);
+            box-shadow: 0 4px 8px rgba(65, 105, 225, 0.5);
+            animation: dropPiece 0.5s ease-out;
+        }
+
+        .cell.green {
+            background: radial-gradient(circle at 30% 30%, #32CD32, #228B22);
+            box-shadow: 0 4px 8px rgba(50, 205, 50, 0.5);
+            animation: dropPiece 0.5s ease-out;
+        }
+
+        @keyframes dropPiece {
+            0% {
+                transform: translateY(-500px);
+                opacity: 0;
+            }
+            60% {
+                transform: translateY(10px);
+            }
+            80% {
+                transform: translateY(-5px);
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .status {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #333;
+            margin-top: 20px;
+            min-height: 40px;
+        }
+
+        .winner {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        .game-over-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .game-over-message {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .game-over-message h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .game-over-message button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        .game-over-message button:hover {
+            background: #764ba2;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .cell {
+                width: 45px;
+                height: 45px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .info-panel {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+
+        /* Konfigurations-Overlay */
+        .config-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .config-panel {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .config-panel h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        .config-group {
+            margin-bottom: 25px;
+        }
+
+        .config-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .config-group select,
+        .config-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .config-group select:focus,
+        .config-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .color-selector {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+        }
+
+        .color-option.selected {
+            border-color: #333;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+        }
+
+        .color-yellow {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+        }
+
+        .color-red {
+            background: linear-gradient(135deg, #FF6347, #DC143C);
+        }
+
+        .color-blue {
+            background: linear-gradient(135deg, #4169E1, #1E90FF);
+        }
+
+        .color-green {
+            background: linear-gradient(135deg, #32CD32, #228B22);
+        }
+
+        .start-btn {
+            width: 100%;
+            padding: 15px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            background: #764ba2;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .difficulty-options {
+            display: none;
+        }
+
+        .difficulty-options.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Konfigurations-Overlay -->
+    <div class="config-overlay" id="configOverlay">
+        <div class="config-panel">
+            <h2>🎮 Spiel Konfiguration</h2>
+            
+            <div class="config-group">
+                <label>Spielmodus:</label>
+                <select id="gameMode" onchange="toggleDifficulty()">
+                    <option value="pvp">2 Spieler (Lokal)</option>
+                    <option value="ai">Gegen KI</option>
+                </select>
+            </div>
+
+            <div class="config-group difficulty-options" id="difficultyGroup">
+                <label>KI-Schwierigkeit:</label>
+                <select id="difficulty">
+                    <option value="easy">Leicht</option>
+                    <option value="medium">Mittel</option>
+                    <option value="hard">Schwer</option>
+                </select>
+            </div>
+
+            <div class="config-group">
+                <label>Spieler 1 Farbe:</label>
+                <div class="color-selector">
+                    <div class="color-option color-yellow selected" data-color="gelb" onclick="selectColor(1, 'gelb')"></div>
+                    <div class="color-option color-red" data-color="rot" onclick="selectColor(1, 'rot')"></div>
+                    <div class="color-option color-blue" data-color="blau" onclick="selectColor(1, 'blau')"></div>
+                    <div class="color-option color-green" data-color="grün" onclick="selectColor(1, 'grün')"></div>
+                </div>
+            </div>
+
+            <div class="config-group">
+                <label id="player2Label">Spieler 2 Farbe:</label>
+                <div class="color-selector">
+                    <div class="color-option color-yellow" data-color="gelb" onclick="selectColor(2, 'gelb')"></div>
+                    <div class="color-option color-red selected" data-color="rot" onclick="selectColor(2, 'rot')"></div>
+                    <div class="color-option color-blue" data-color="blau" onclick="selectColor(2, 'blau')"></div>
+                    <div class="color-option color-green" data-color="grün" onclick="selectColor(2, 'grün')"></div>
+                </div>
+            </div>
+
+            <button class="start-btn" onclick="startGame()">Spiel Starten</button>
+        </div>
+    </div>
+
+    <div class="game-container">
+        <h1>🎮 4 Gewinnt 🎮</h1>
+        
+        <div class="info-panel">
+            <div class="player-info" id="currentPlayer">
+                Aktueller Spieler: <span class="player-yellow">Spieler 1 (GELB)</span>
+            </div>
+            <button class="reset-btn" onclick="showConfig()">Neues Spiel</button>
+        </div>
+
+        <div class="board-container">
+            <div class="board" id="board"></div>
+        </div>
+
+        <div class="status" id="status"></div>
+    </div>
+
+    <div class="game-over-overlay" id="gameOverOverlay">
+        <div class="game-over-message">
+            <h2 id="gameOverText">🎉 Gewonnen! 🎉</h2>
+            <button onclick="resetGame()">Neues Spiel starten</button>
+        </div>
+    </div>
+
+    <script src="connectfour.js"></script>
+</body>
+</html>

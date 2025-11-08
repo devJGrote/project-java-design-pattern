@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conway's Game of Life</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 30px;
+            max-width: 1400px;
+            width: 100%;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #56ab2f 0%, #a8e063 100%);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f09819 0%, #edde5d 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #3a7bd5 0%, #00d2ff 100%);
+            color: white;
+        }
+
+        .stats {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .canvas-container {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            background: #000;
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        canvas {
+            border: 2px solid #333;
+            border-radius: 5px;
+            cursor: crosshair;
+        }
+
+        .settings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .setting-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input[type="number"],
+        input[type="range"] {
+            padding: 8px 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="number"]:focus,
+        input[type="range"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        input[type="range"] {
+            cursor: pointer;
+        }
+
+        .speed-display {
+            display: inline-block;
+            margin-left: 10px;
+            color: #667eea;
+            font-weight: bold;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+        }
+
+        .info-box h3 {
+            color: #1976d2;
+            margin-bottom: 10px;
+        }
+
+        .info-box ul {
+            margin-left: 20px;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .controls {
+                flex-direction: column;
+            }
+
+            button {
+                width: 100%;
+            }
+
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧬 Conway's Game of Life</h1>
+        <p class="subtitle">Ein zellularer Automat nach John Conway</p>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-label">Generation</div>
+                <div class="stat-value" id="generation">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Lebende Zellen</div>
+                <div class="stat-value" id="aliveCount">0</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Feldgröße</div>
+                <div class="stat-value" id="gridSize">100×100</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn-success" onclick="startAutoPlay()">▶ Start</button>
+            <button class="btn-warning" onclick="pauseAutoPlay()">⏸ Pause</button>
+            <button class="btn-primary" onclick="nextGeneration()">⏭ Nächste Generation</button>
+            <button class="btn-info" onclick="runMultiple()">⏩ 10 Generationen</button>
+            <button class="btn-danger" onclick="resetGame()">🔄 Reset</button>
+        </div>
+
+        <div class="canvas-container">
+            <canvas id="gameCanvas"></canvas>
+        </div>
+
+        <div class="settings">
+            <div class="setting-group">
+                <label for="width">Breite:</label>
+                <input type="number" id="width" value="100" min="10" max="200">
+            </div>
+            <div class="setting-group">
+                <label for="height">Höhe:</label>
+                <input type="number" id="height" value="100" min="10" max="200">
+            </div>
+            <div class="setting-group">
+                <label for="probability">Initialdichte: <span class="speed-display" id="probDisplay">30%</span></label>
+                <input type="range" id="probability" min="0" max="100" value="30" oninput="updateProbDisplay()">
+            </div>
+            <div class="setting-group">
+                <label for="speed">Geschwindigkeit: <span class="speed-display" id="speedDisplay">500ms</span></label>
+                <input type="range" id="speed" min="50" max="2000" value="500" step="50" oninput="updateSpeedDisplay()">
+            </div>
+        </div>
+
+        <button class="btn-info" onclick="initGame()" style="width: 100%; margin-top: 20px;">
+            🎮 Neues Spiel mit aktuellen Einstellungen starten
+        </button>
+
+        <div class="info-box">
+            <h3>📖 Spielregeln:</h3>
+            <ul>
+                <li><strong>Unterpopulation:</strong> Zelle stirbt bei weniger als 2 Nachbarn</li>
+                <li><strong>Überleben:</strong> Zelle überlebt mit 2 oder 3 Nachbarn</li>
+                <li><strong>Überpopulation:</strong> Zelle stirbt bei mehr als 3 Nachbarn</li>
+                <li><strong>Reproduktion:</strong> Tote Zelle wird lebendig bei genau 3 Nachbarn</li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="game.js"></script>
+</body>
+</html>
