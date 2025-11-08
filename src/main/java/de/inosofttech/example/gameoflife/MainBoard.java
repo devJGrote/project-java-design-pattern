@@ -6,8 +6,8 @@ import java.util.concurrent.TimeUnit;
 public class MainBoard {
 
     public static void main(String[] args) throws InterruptedException {
-        int x = 50;
-        int y = 50;
+        int x = 33;
+        int y = 66;
         var board = generateBoard(x,y);
 
         while (true) {
