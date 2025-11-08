@@ -23,4 +23,16 @@ public class SpielfeldTest {
         spielfeld.setLebendigeZelle(2, 2);
         assertTrue(spielfeld.istLebendigeZelle(2, 2));
     }
+
+    @Test
+    void testZwanzigProzentZellenLebendig() {
+        Spielfeld spielfeld = new Spielfeld(10, 10);
+
+        spielfeld.initialLebendigeZellenProzent(20);
+
+        
+
+        assertTrue(spielfeld.getLebendigeZellen() == 20);
+    }
+
 }
