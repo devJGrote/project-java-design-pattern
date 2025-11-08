@@ -16,4 +16,11 @@ public class SpielfeldTest {
             () -> assertTrue(spielfeld.getHoehe() == 5)
         );
     }
+
+    @Test
+    void testIstLebendigeZelle() {
+        Spielfeld spielfeld = new Spielfeld(5, 5);
+        spielfeld.setLebendigeZelle(2, 2);
+        assertTrue(spielfeld.istLebendigeZelle(2, 2));
+    }
 }
